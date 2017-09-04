@@ -1,5 +1,6 @@
 package com.sharyi_dmytro.practice.module02.Controller;
 
+import com.sharyi_dmytro.practice.module02.DAO.MainDAO;
 import com.sharyi_dmytro.practice.module02.DAO.ProjectDAO;
 import com.sharyi_dmytro.practice.module02.Entities.Company;
 import com.sharyi_dmytro.practice.module02.Entities.Customer;
@@ -14,41 +15,58 @@ import java.util.List;
  */
 public class ProjectControllerImpl implements ProjectController {
 
-    private ProjectDAO daoProject;
+    private MainDAO<Project, Integer> projectDao;
 
-    public ProjectControllerImpl(ProjectDAO daoProject) {
-        this.daoProject = daoProject;
+    public ProjectControllerImpl(MainDAO<Project, Integer> projectDao) {
+        this.projectDao = projectDao;
     }
 
-    public boolean create(String name, int cost, int idCompany, int idCustomers) {
-        daoProject.create(name, cost, idCompany, idCustomers);
+    public boolean create(String name, int cost, Company company, Customer customer) {
+
+        Project project = new Project();
+        project.setName(name);
+        project.setCost(cost);
+        project.setCompany(company);
+        project.setCustomer(customer);
+
+        projectDao.create(project);
+
         return true;
     }
 
     public Project read(int id) throws WrongId {
-        if (daoProject.getAll().stream().map(Project::getId).noneMatch(integer -> id == integer))
-            throw new WrongId("Проекта с таким id не существует, повторите ввод!");
-        return daoProject.read(id);
+        if (projectDao.getAll().stream().noneMatch(project -> project.getId() == id))
+            throw new WrongId("Проекта с таким ID не существует, повторите ввод");
+
+        return projectDao.read(id);
     }
 
     public boolean update(int id, String newName, int newCost) throws WrongId {
-        if (daoProject.getAll().stream().map(Project::getId).noneMatch(integer -> id == integer))
-            throw new WrongId("Проекта с таким id не существует, повторите ввод!");
+        if (projectDao.getAll().stream().noneMatch(project -> project.getId() == id))
+            throw new WrongId("Проекта с таким ID не существует, повторите ввод");
 
-        daoProject.update(id, newName, newCost);
+        Project project = read(id);
+        project.setId(id);
+        project.setName(newName);
+        project.setCost(newCost);
+
+        projectDao.update(project);
+
         return true;
     }
 
     public boolean delete(int id) throws WrongId {
-        if (daoProject.getAll().stream().map(Project::getId).noneMatch(integer -> id == integer))
-            throw new WrongId("Проекта с таким id не существует, повторите ввод!");
-        daoProject.delete(id);
+        if (projectDao.getAll().stream().noneMatch(project -> project.getId() == id))
+            throw new WrongId("Проекта с таким ID не существует, повторите ввод");
+
+        Project project = projectDao.read(id);
+
+        projectDao.delete(project);
+
         return true;
     }
 
-
-    public void showAll() {
-        daoProject.getAll().forEach(System.out::println);
+    public List<Project> showAll() {
+        return projectDao.getAll();
     }
 }
-

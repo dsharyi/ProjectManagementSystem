@@ -2,6 +2,7 @@ package com.sharyi_dmytro.practice.module02.APIs;
 
 
 import com.sharyi_dmytro.practice.module02.Entities.*;
+import com.sharyi_dmytro.practice.module02.Exceptions.IncorrectName;
 import com.sharyi_dmytro.practice.module02.Exceptions.SkillNull;
 import com.sharyi_dmytro.practice.module02.Exceptions.WrongId;
 
@@ -9,9 +10,9 @@ import java.util.List;
 
 public interface API {
 
-    boolean createDeveloper(String name, String secondName, int salary, String projectName, List<String> skills) throws SkillNull;
+    boolean createDeveloper(String name, String secondName, int salary, Project projectName, List<Skill> skills) throws SkillNull;
 
-    boolean updateDeveloper(int id, String newName, String newSecondName, int newSalary, List<String> skills) throws WrongId;
+    boolean updateDeveloper(int id, String newName, String newSecondName, int newSalary,Project project, List<Skill> skills) throws WrongId;
 
     Developer readDeveloper(int id) throws WrongId;
 
@@ -19,7 +20,7 @@ public interface API {
 
     void showAllDevelopers();
 
-    boolean createSkill(String nameSkill);
+    boolean createSkill(String nameSkill) throws SkillNull;
 
     Skill readSkill(int id) throws WrongId;
 
@@ -49,7 +50,7 @@ public interface API {
 
     void showAllCompanies();
 
-    boolean createProject(String name, int cost, int idCompany, int idCustomer) throws WrongId;
+    boolean createProject(String name, int cost, Company company, Customer customer) throws WrongId;
 
     Project readProject(int id) throws WrongId;
 
@@ -58,5 +59,9 @@ public interface API {
     boolean deleteProject(int id) throws WrongId;
 
     void showAllProjects();
+
+    Project findProjectByName(String nameProject) throws IncorrectName;
+
+    Skill findSkillByName(String skillName) throws IncorrectName;
 }
 

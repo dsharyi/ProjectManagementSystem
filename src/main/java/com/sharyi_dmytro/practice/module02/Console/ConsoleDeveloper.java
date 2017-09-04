@@ -1,6 +1,9 @@
 package com.sharyi_dmytro.practice.module02.Console;
 
 import com.sharyi_dmytro.practice.module02.APIs.API;
+import com.sharyi_dmytro.practice.module02.Entities.Project;
+import com.sharyi_dmytro.practice.module02.Entities.Skill;
+import com.sharyi_dmytro.practice.module02.Exceptions.IncorrectName;
 import com.sharyi_dmytro.practice.module02.Exceptions.SkillNull;
 import com.sharyi_dmytro.practice.module02.Exceptions.WrongId;
 
@@ -69,7 +72,7 @@ public class ConsoleDeveloper {
             int salary;
             String projectName;
             String skill;
-            List<String> skills;
+            List<Skill> skills;
 
             try {
                 System.out.println("Введите имя разработчика: ");
@@ -85,6 +88,7 @@ public class ConsoleDeveloper {
                 System.out.println("Доступные проекты:");
                 api.showAllProjects();
                 projectName = br.readLine();
+                Project proj = api.findProjectByName(projectName);
 
                 System.out.println("Введите список навыков для разработчика! Для окончания ввода введите \"0\"!");
                 System.out.println("Доступные навыки:");
@@ -92,10 +96,12 @@ public class ConsoleDeveloper {
                 skills = new ArrayList<>();
 
                 while (!Objects.equals(skill = br.readLine(), "0")) {
-                    skills.add(skill);
+                    Skill skillByName = api.findSkillByName(skill);
+
+                    skills.add(skillByName);
                 }
 
-                api.createDeveloper(name, secondName, salary, projectName, skills);
+                api.createDeveloper(name, secondName, salary, proj, skills);
                 System.out.println("Разработчик успешно добавлен в базу данных!");
                 return;
 
@@ -103,6 +109,9 @@ public class ConsoleDeveloper {
                 e.printStackTrace();
             } catch (SkillNull skillNull) {
                 System.out.println(skillNull.getMessage());
+            }
+            catch (IncorrectName i){
+                System.out.println(i.getMessage());
             }
         }
     }
@@ -141,7 +150,8 @@ public class ConsoleDeveloper {
             String newSecondName;
             int newSalary;
             String newskill;
-            List<String> newSkills;
+            List<Skill> newSkills;
+            Project project;
 
             try {
                 api.showAllDevelopers();
@@ -158,14 +168,22 @@ public class ConsoleDeveloper {
                 System.out.println("Введите новый размер зарплаты: ");
                 newSalary = Integer.parseInt(br.readLine());
 
+                api.showAllSkills();
+
                 System.out.println("Введите новый список навыков для разработчика! Для окончания ввода введите \"0\"!");
                 newSkills = new ArrayList<>();
 
                 while (!Objects.equals(newskill = br.readLine(), "0")) {
-                    newSkills.add(newskill);
+                    Skill skillByName = api.findSkillByName(newskill);
+
+                    newSkills.add(skillByName);
                 }
 
-                api.updateDeveloper(id, newName, newSecondName, newSalary, newSkills);
+                api.showAllProjects();
+                System.out.println("\nВведите название проекта над которым будет работать разработчик: ");
+                project = api.findProjectByName(br.readLine());
+
+                api.updateDeveloper(id, newName, newSecondName, newSalary,project, newSkills);
                 System.out.println("Изменения произведены успешно!");
                 api.readDeveloper(id);
                 return;
@@ -174,6 +192,9 @@ public class ConsoleDeveloper {
                 e.printStackTrace();
             } catch (WrongId wrongId) {
                 System.out.println(wrongId.getMessage());
+            }
+            catch (IncorrectName incorrectName){
+                System.out.println(incorrectName.getMessage());
             }
 
         }

@@ -1,19 +1,52 @@
 package com.sharyi_dmytro.practice.module02.Entities;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "project", schema = "db_for_hibernate")
+@NamedQuery(name = "Project.getAll", query = "SELECT project FROM Project project")
 public class Project {
     private int id;
-    private String projectName;
-    private int projectCost;
+    private String name;
+    private int cost;
     private Company company;
     private Customer customer;
-    private List<Developer>developers;
+    private List<Developer> developers;
 
-    public Project(String projectName, int projectCost, Customer customer, Company company) {
-
+    public Project() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idProject", nullable = false)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int idProject) {
+        this.id = idProject;
+    }
+
+    @Column(name = "name", length = 45, nullable = false)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "cost", nullable = false)
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     public List<Developer> getDevelopers() {
         return developers;
     }
@@ -22,66 +55,65 @@ public class Project {
         this.developers = developers;
     }
 
-    public Project(String projectName, int projectCost, Company company, Customer customer) {
-        this.projectName = projectName;
-        this.projectCost = projectCost;
-        this.company = company;
-        this.customer = customer;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Project project = (Project) o;
 
+        if (id != project.id) return false;
+        if (cost != project.cost) return false;
+        if (name != null ? !name.equals(project.name) : project.name != null) return false;
+
+        return true;
     }
 
-    public Project() {
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + cost;
+        return result;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public int getProjectCost() {
-        return projectCost;
-    }
-
-    public void setProjectCost(int projectCost) {
-        this.projectCost = projectCost;
-    }
-
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "idCompany", referencedColumnName = "idCompany")
     public Company getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompany(Company companyByIdCompany) {
+        this.company = companyByIdCompany;
     }
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "idCustomer", referencedColumnName = "idCustomer")
     public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomer(Customer customerByIdCustomer) {
+        this.customer = customerByIdCustomer;
     }
+
 
     @Override
     public String toString() {
-    return "Developer " +
-            "id=" + id +
-            ",| project: '" + projectName + '\'' +
-            ",| cost: " + projectCost +
-            ",| company: " + company +
-            ",| customer: " + customer +
-            " | developers: " + (developers == null ? "Dont have developers!" : developers);
-}
+        String dev = "";
+        if (developers != null) {
+            for (int i = 0; i < developers.size(); i++) {
+                dev += developers.get(i).getName() + " " + developers.get(i).getSecondName() + (i == developers.size() - 1 ? "" : ", ");
+            }
+        } else dev = "Project has 0 developers";
+
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cost=" + cost +
+                ", developers=" + developers.size() + "  " + String.valueOf(dev) +
+                ", customer=" + (customer.getProjects().stream().noneMatch(project -> project.equals(this)) ? "Dont have customer" : customer.getName() + " " ) +
+                ", company=" + (company.getProjects().stream().noneMatch(project -> project.equals(this)) ? "Dont have a company" : company.getName()) +
+                '}';
+    }
 }

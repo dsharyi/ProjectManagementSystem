@@ -1,6 +1,7 @@
 package com.sharyi_dmytro.practice.module02.Console;
 
 import com.sharyi_dmytro.practice.module02.APIs.API;
+import com.sharyi_dmytro.practice.module02.Exceptions.SkillNull;
 import com.sharyi_dmytro.practice.module02.Exceptions.WrongId;
 
 import java.io.BufferedReader;
@@ -70,6 +71,9 @@ public class ConsoleSkill {
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            catch (SkillNull skillNull){
+                System.out.println(skillNull.getMessage());
             }
         }
     }

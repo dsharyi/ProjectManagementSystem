@@ -1,46 +1,64 @@
 package com.sharyi_dmytro.practice.module02.Controller;
 
 import com.sharyi_dmytro.practice.module02.DAO.CompanyDAO;
+import com.sharyi_dmytro.practice.module02.DAO.MainDAO;
 import com.sharyi_dmytro.practice.module02.Entities.Company;
 import com.sharyi_dmytro.practice.module02.Exceptions.WrongId;
+
+import java.util.List;
 
 /**
  * Created by nonal on 31.07.2017.
  */
 public class CompanyControllerImpl implements CompanyController {
 
-    CompanyDAO daoCompany;
+    private MainDAO<Company, Integer> companyDao;
 
-    public CompanyControllerImpl(CompanyDAO daoCompany) {
-        this.daoCompany = daoCompany;
+    public CompanyControllerImpl(MainDAO<Company, Integer> companyDao) {
+        this.companyDao = companyDao;
     }
 
     public boolean create(String name) {
-        daoCompany.create(name);
+
+        Company company = new Company();
+        company.setName(name);
+
+        companyDao.create(company);
+
         return true;
     }
 
     public Company read(int id) throws WrongId {
-        if (daoCompany.getAll().stream().map(Company::getId).noneMatch(integer -> integer == id))
-            throw new WrongId("Компании с таким ID не существует, повторите ввод!");
-        return daoCompany.read(id);
+
+        return companyDao.read(id);
+
     }
 
     public boolean updade(int id, String newName) throws WrongId {
-        if (daoCompany.getAll().stream().map(Company::getId).noneMatch(integer -> integer == id))
-            throw new WrongId("Компании с таким ID не существует, повторите ввод!");
-        daoCompany.update(id, newName);
+        if (companyDao.getAll().stream().noneMatch(company -> company.getIdCompany() == id))
+            throw new WrongId("Компании с таким ID не существует, повторите ввод");
+
+        Company company = new Company();
+        company.setIdCompany(id);
+        company.setName(newName);
+
+        companyDao.update(company);
+
         return true;
     }
 
     public boolean delete(int id) throws WrongId {
-        if (daoCompany.getAll().stream().map(Company::getId).noneMatch(integer -> integer == id))
-            throw new WrongId("Компании с таким ID не существует, повторите ввод!");
-        daoCompany.delete(id);
+        if (companyDao.getAll().stream().noneMatch(company -> company.getIdCompany() == id))
+            throw new WrongId("Компании с таким ID не существует, повторите ввод");
+
+        Company company = read(id);
+
+        companyDao.delete(company);
+
         return true;
     }
 
-    public void showAllCompanies() {
-        daoCompany.getAll().forEach(System.out::println);
+    public List<Company> showAllCompanies() {
+        return companyDao.getAll();
     }
 }

@@ -6,7 +6,7 @@ import com.sharyi_dmytro.practice.module02.APIs.Program;
 import com.sharyi_dmytro.practice.module02.Console.*;
 import com.sharyi_dmytro.practice.module02.Controller.*;
 import com.sharyi_dmytro.practice.module02.DAO.*;
-import org.apache.commons.dbcp.BasicDataSource;
+import com.sharyi_dmytro.practice.module02.Entities.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,29 +14,21 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        final String URL = "jdbc:mysql://localhost:3306/dev_db?useUnicode=true&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-        final String USER = "root";
-        final String PASSWORD = "root";
 
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(URL);
-        basicDataSource.setUsername(USER);
-        basicDataSource.setPassword(PASSWORD);
-        basicDataSource.setInitialSize(3);
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        SkillDAO skillDAO = new SkillDAOimpl(basicDataSource);
-        CompanyDAO companyDAO = new CompanyDAOimpl(basicDataSource);
-        CustomerDAO customerDAO = new CustomerDAOimpl(basicDataSource);
-        ProjectDAO projectDAO = new ProjectDAOimpl(basicDataSource);
-        DeveloperDAO developerDAO = new DeveloperDAOimpl(basicDataSource);
+        MainDAO<Project, Integer> projectDao = new ProjectDAO();
+        MainDAO<Company, Integer> companyDao = new CompanyDAO();
+        MainDAO<Customer, Integer> customerDao = new CustomerDAO();
+        MainDAO<Developer, Integer> developerDao = new DeveloperDAO();
+        MainDAO<Skill, Integer> skillDao = new SkillDAO();
 
-        SkillController skillController = new SkillControllerImpl(skillDAO);
-        CompanyController companyController = new CompanyControllerImpl(companyDAO);
-        CustomerController customerController = new CustomerControllerImpl(customerDAO);
-        ProjectController projectController = new ProjectControllerImpl(projectDAO);
-        DeveloperController developerController = new DeveloperControllerImpl(developerDAO);
+        SkillController skillController = new SkillControllerImpl(skillDao);
+        CompanyController companyController = new CompanyControllerImpl(companyDao);
+        CustomerController customerController = new CustomerControllerImpl(customerDao);
+        ProjectController projectController = new ProjectControllerImpl(projectDao);
+        DeveloperController developerController = new DeveloperControllerImpl(developerDao);
 
         API api = new Program(skillController,
                 developerController,

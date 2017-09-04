@@ -13,11 +13,11 @@ public interface CustomerController {
 
     Customer read(int id) throws WrongId;
 
-    boolean updade(int id, String newName) throws WrongId;
+    boolean update(int id, String newName) throws WrongId;
 
     boolean delete(int id) throws WrongId;
 
-    void showAllCustomers();
+    List<Customer> showAllCustomers();
 
 }
 

@@ -1,6 +1,8 @@
 package com.sharyi_dmytro.practice.module02.Console;
 
 import com.sharyi_dmytro.practice.module02.APIs.API;
+import com.sharyi_dmytro.practice.module02.Entities.Company;
+import com.sharyi_dmytro.practice.module02.Entities.Customer;
 import com.sharyi_dmytro.practice.module02.Exceptions.WrongId;
 
 import java.io.BufferedReader;
@@ -81,7 +83,10 @@ public class ConsoleProject {
                     System.out.println("Введите ID заказчика: ");
                     idCustomer = Integer.parseInt(br.readLine());
 
-                    api.createProject(name, cost, idCompany, idCustomer);
+                    Company company = api.readCompany(idCompany);
+                    Customer customer = api.readCustomer(idCustomer);
+
+                    api.createProject(name, cost, company, customer);
 
                     System.out.println("Проект успешно добавлен в базу даных!");
 
