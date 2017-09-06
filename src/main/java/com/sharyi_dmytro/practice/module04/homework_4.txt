@@ -1,0 +1,40 @@
+1.
+GET / HTTP / 1.1
+Host: example.com
+2.
+GET / find?param1=value1&param2=value2 HTTP/1.1
+Host: search.com
+3.
+GET / find?param1=I&param2=want&param3=to&param4=buyparam5=a&param6=flat HTTP/1.1
+Host: search.com
+4.
+POST / add_item?locale=ru
+Host: buyme.com
+5.
+DELETE / remove_item?locale=ru
+Host: buyme.com
+6.
+Status Code: 200 OK (Ђхорошої)
+Status Code: 204 No Content (Ђнет содержимогої)
+Status Code: 302 Found, 302 Moved Temporarily - ресурс найден но надо перенаправить на другой ресурс
+Status Code: 501 Not Implemented - запрашиваемый HTTP метод сервером не поддерживаетс€
+Status Code: 500 Internal Server Error(Ђвнутренн€€ ошибка сервераї)
+7.
+GET / HTTP/1.1
+HOST: example.com
+Connection: keep-alive
+8.
+GET /spec.html HTTP/1.1
+Host: example.com
+Cookie:yandexuid=70996951503158084; yp=1818518084.yrts.1503158084; fuid01=599ae9844c246e6c.my2fvRPY5r-Nqu99fNy86UvCV5UI3QZvfQmQBgtsSRh6ydP_todRhWQPxmt7LS8ufxr_KHJube_UjwArhsT8xvw1j_P0pJIbLuZUPtk5M5Y6CkgY0i6NJJidaG82i0I7; i=sTsoeTAFs6prI3dKMkZQXSY1aN4UBIn+inHSVS1hWoJPhHVT1caMiQ/7w3fKTSEXbr1dnO5h/zBbQREmI/thKnaTJLY=; _ym_uid=1503573156178811129; mda=0; _ym_isad=2; yabs-sid=1923017791504722135
+9.
+POST / login?username=user&password=pass HTTP / 1.1
+Host: auth.com
+10.
+PUT /form.html HTTP/1.1
+Host: upload.com
+Connection: keep-alive
+Keep-Alive: 300
+
+Content-Disposition: form-data; name="file"; filename="file.txt"
+Content-Type: text/plain
